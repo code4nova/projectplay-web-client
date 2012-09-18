@@ -1,6 +1,12 @@
+
 html, body, #map_canvas {
 	margin: 0;
 	padding: 0;
+	height: 100%;
+}
+
+html {
+	overflow: hidden
 }
 
 #header_bar {
@@ -10,9 +16,8 @@ html, body, #map_canvas {
 
 #overhang_bar {
 	height: 15px;
-	background-color:#1d7713;
-	border-top:dotted #22ad29 2px;
-	border-bottom: solid #20680a 1px;
+	background-color: #1d7713;
+	border-top: dotted #22ad29 2px;
 }
 
 #hidden_h1 {
@@ -21,11 +26,31 @@ html, body, #map_canvas {
 
 #map_canvas {
 	height: 100%;
+	margin-left: 302px;
 }
 
-#hanging_header_img {
+#side_bar {
+	height: 100%;
+	width: 300px;
+	position: absolute;
+	top:0px;
+	left:0px;
+	background-color: #1d7713;
+	border-right: solid #666666 1px;
+}
+
+#header_img {
 	display: block;
 	position: absolute;
-	top: 4px;
-	left: 4px;
+	top: 0px;
+	left: 0px;
+}
+
+#app_panel {
+	margin: 5px 10px 5px 10px;
+}
+
+.app_panel_button {
+	font-family: Arial, Helvetica, sans-serif;
+    font-size:12px;
 }

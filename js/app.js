@@ -52,11 +52,13 @@ var playApp = function()
 				var playObj = playData[i];
 				console.log(playObj);
 
+				var image = new google.maps.MarkerImage('./img/playground_marker.png');
 				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				var marker = new google.maps.Marker({
 		            position: pt,
 		            map: inst.map,
-		            title: playObj.name
+		            title: playObj.name,
+		            icon: image
 		        });
 			}
 		}

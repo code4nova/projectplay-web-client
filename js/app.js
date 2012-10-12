@@ -9,6 +9,9 @@ var playApp = function()
 	    playUrl: "http://0.0.0.0:3000/"
 	};
 
+	inst.lastCircle = null;
+	inst.markers = [];
+
 	inst.initialize = function() {
 		var mapCenter = new google.maps.LatLng(config.startLatLon[0], config.startLatLon[1]);
 		var zoomLvl = config.startZoom;
@@ -96,12 +99,11 @@ var playApp = function()
 
 	var searchByAddress = function() {
 		var address = $('#inputAddress').val();
-		var dist = $('#inputDistance').val();
 		inst.svc.geoCodeAddress(address, renderAddressSearch);
 	}
 
 	var renderAddressSearch = function(results) {
-		console.log(results);
+		clearCircle();
 		var pt = new google.maps.LatLng(results.geometry.location.lat(), results.geometry.location.lng());
 		var name = results.formatted_address;
 		var marker = new google.maps.Marker({
@@ -110,9 +112,38 @@ var playApp = function()
 		            title: name,
 		            //icon: image
 		        });
+		inst.map.setCenter(pt);
+
+		var dist = parseInt($('#inputDistance').val(), 10);
+		console.log(dist);
+		var circleOptions = {
+	      strokeColor: "#ff0000",
+	      strokeOpacity: 0.7,
+	      strokeWeight: 1,
+	      fillColor: "#00ff21",
+	      fillOpacity: 0.1,
+	      map: inst.map,
+	      center: pt,
+	      radius: dist * 1609.344
+	    };
+
+	    inst.lastCircle = new google.maps.Circle(circleOptions);
 	}
 
+	var clearMarkers = function() {
+	  for (var i = 0; i < inst.markers.length; i++ ) {
+	    inst.markers[i].setMap(null);
+	  }
+	};
+
+	var clearCircle = function() {
+		if (inst.lastCircle) {
+		  	inst.lastCircle.setMap(null);
+		}
+	};
+
 	var renderPlaygrounds = function(playData) {
+		clearMarkers();
 		if (playData) {
 			for (var i = 0; i < playData.length; i++) {
 				var playObj = playData[i];
@@ -124,17 +155,25 @@ var playApp = function()
 					    new google.maps.Point(16, 37) //offset
 					);
 				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
-				var marker = new google.maps.Marker({
-		            position: pt,
-		            map: inst.map,
-		            title: playObj.name,
-		            icon: image
-		        });
+				
+				if (inst.lastCircle) {
+					if (inst.lastCircle.contains(pt)) {
+						var marker = new google.maps.Marker({
+				            position: pt,
+				            map: inst.map,
+				            title: playObj.name,
+				            icon: image
+				        });
+				        inst.markers.push(marker);
+					}
+				}
 			}
 		}
 	};
 
 	return inst;
 };
+
+
 
 

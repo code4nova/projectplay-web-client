@@ -22,23 +22,7 @@ var playSvc = function(url) {
 
 	inst.geoCodeAddress = function(address, callback) {
 		var caller = callback;
-		/*var geoCodeBaseUrl = "https://maps.googleapis.com/maps/api/geocode/json?";
-		var gcUrl = [geoCodeBaseUrl, "address=", encodeURIComponent(address), "&sensor=false"].join("");
-		
-		//console.log(gcUrl);
-		$.ajax({
-			type: 'GET',
-			url: gcUrl,
-			async: false,
-			contentType: 'application/json',
-			dataType: 'jsonp',
-			success: function(json) {
-				caller.apply(null, [json]);
-		    },
-		    error: function(e) {
-		       caller.apply(null, [false]);
-		    }
-		});*/
+
 		var geocoder = new google.maps.Geocoder(); 
 		geocoder.geocode(
 		    { address : address, 

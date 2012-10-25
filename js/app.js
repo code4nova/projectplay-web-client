@@ -10,6 +10,7 @@ var playApp = function()
 	};
 
 	inst.lastCircle = null;
+	inst.addressCenterPoint = null;
 	inst.markers = [];
 
 	inst.initialize = function() {
@@ -94,19 +95,22 @@ var playApp = function()
 	};
 
 	var showAllPlaygrounds = function() {
-		inst.svc.getAllPlaygrounds(renderPlaygrounds);
+		clearCircle();
+		clearMarkers();
+		inst.svc.getAllPlaygrounds(function(data) { renderPlaygrounds(data); zoomToMarkerBounds();});
 	};
 
 	var searchByAddress = function() {
+		clearCircle();
+		clearMarkers();
 		var address = $('#inputAddress').val();
-		inst.svc.geoCodeAddress(address, renderAddressSearch);
+		inst.svc.geoCodeAddress(address, function(data) { renderAddressSearch(data); });
 	}
 
 	var renderAddressSearch = function(results) {
-		clearCircle();
 		var pt = new google.maps.LatLng(results.geometry.location.lat(), results.geometry.location.lng());
 		var name = results.formatted_address;
-		var marker = new google.maps.Marker({
+		inst.addressCenterPoint = new google.maps.Marker({
 		            position: pt,
 		            map: inst.map,
 		            title: name,
@@ -128,6 +132,7 @@ var playApp = function()
 	    };
 
 	    inst.lastCircle = new google.maps.Circle(circleOptions);
+	    inst.svc.getAllPlaygrounds(renderPlaygrounds);
 	}
 
 	var clearMarkers = function() {
@@ -139,15 +144,19 @@ var playApp = function()
 	var clearCircle = function() {
 		if (inst.lastCircle) {
 		  	inst.lastCircle.setMap(null);
+		  	inst.lastCircle = null;
+		}
+		if (inst.addressCenterPoint) {
+			inst.addressCenterPoint.setMap(null);
+			inst.addressCenterPoint = null;
 		}
 	};
 
 	var renderPlaygrounds = function(playData) {
-		clearMarkers();
 		if (playData) {
 			for (var i = 0; i < playData.length; i++) {
 				var playObj = playData[i];
-				console.log(playObj);
+				//console.log(playObj);
 
 				var image = new google.maps.MarkerImage('./img/playground_marker.png',
 						new google.maps.Size(32, 37), //icon size
@@ -156,19 +165,42 @@ var playApp = function()
 					);
 				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				
+				var addMarker = function() {
+					var marker = new google.maps.Marker({
+			            position: pt,
+			            map: inst.map,
+			            title: playObj.name,
+			            icon: image
+			        });
+			        inst.markers.push(marker);
+				}
+
 				if (inst.lastCircle) {
 					if (inst.lastCircle.contains(pt)) {
-						var marker = new google.maps.Marker({
-				            position: pt,
-				            map: inst.map,
-				            title: playObj.name,
-				            icon: image
-				        });
-				        inst.markers.push(marker);
+						addMarker();
 					}
+				}
+				else {
+					addMarker();
 				}
 			}
 		}
+	};
+
+	var zoomToMarkerBounds = function() {
+		var bounds = new google.maps.LatLngBounds();
+		var extent = [];
+		for (var i = 0; i < inst.markers.length; i++ ) {
+	    	//console.log(inst.markers[i]);
+	    	//extent.push(inst.markers[i].position.Ya, inst.markers[i].position.Za);
+	    	bounds.extend(inst.markers[i].position);
+	    }
+	    
+	    inst.map.fitBounds(bounds);
+	    var listener = google.maps.event.addListener(inst.map, "idle", function() { 
+		  if (inst.map.getZoom() > 16) inst.map.setZoom(16); 
+		  google.maps.event.removeListener(listener); 
+		});
 	};
 
 	return inst;

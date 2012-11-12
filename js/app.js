@@ -51,58 +51,21 @@ var playApp = function()
 			}
 		);
 
-		/*$("#search").append("<div><input id='loc_auto' type='text' /></div>");
-
-		var input = document.getElementById('searchTextField');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        autocomplete.bindTo('bounds', inst.map);
-        var infowindow = new google.maps.InfoWindow();
-        var marker = new google.maps.Marker({
-          map: inst.map
-        });
-
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-          infowindow.close();
-          var place = autocomplete.getPlace();
-          if (place.geometry.viewport) {
-            inst.map.fitBounds(place.geometry.viewport);
-          } else {
-            inst.map.setCenter(place.geometry.location);
-            inst.map.setZoom(17);  // Why 17? Because it looks good.
-          }
-
-          var image = new google.maps.MarkerImage(
-              place.icon,
-              new google.maps.Size(71, 71),
-              new google.maps.Point(0, 0),
-              new google.maps.Point(17, 34),
-              new google.maps.Size(35, 35));
-          marker.setIcon(image);
-          marker.setPosition(place.geometry.location);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-
-          infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
-          infowindow.open(inst.map, marker);
-        });*/
+		$("#app_listview").hide();
+		$("#app_pager").hide();
 	};
 
 	var showAllPlaygrounds = function() {
 		clearCircle();
 		clearMarkers();
+		clearListView();
 		inst.svc.getAllPlaygrounds(function(data) { renderPlaygrounds(data); zoomToMarkerBounds();});
 	};
 
 	var searchByAddress = function() {
 		clearCircle();
 		clearMarkers();
+		clearListView();
 		var address = $('#inputAddress').val();
 		inst.svc.geoCodeAddress(address, function(data) { renderAddressSearch(data); });
 	}
@@ -119,7 +82,7 @@ var playApp = function()
 		inst.map.setCenter(pt);
 
 		var dist = parseInt($('#inputDistance').val(), 10);
-		console.log(dist);
+		//console.log(dist);
 		var circleOptions = {
 	      strokeColor: "#ff0000",
 	      strokeOpacity: 0.7,
@@ -152,8 +115,14 @@ var playApp = function()
 		}
 	};
 
+	var clearListView = function() {
+		$('#listTbl').html("");
+		$('#app_pager').hide();
+	}
+
 	var renderPlaygrounds = function(playData) {
 		if (playData) {
+			var filteredList = [];
 			for (var i = 0; i < playData.length; i++) {
 				var playObj = playData[i];
 				//console.log(playObj);
@@ -173,6 +142,7 @@ var playApp = function()
 			            icon: image
 			        });
 			        inst.markers.push(marker);
+			        filteredList.push(playObj);
 				}
 
 				if (inst.lastCircle) {
@@ -184,6 +154,7 @@ var playApp = function()
 					addMarker();
 				}
 			}
+			renderListView(filteredList);
 		}
 	};
 
@@ -197,14 +168,38 @@ var playApp = function()
 	    }
 	    
 	    inst.map.fitBounds(bounds);
-	    var listener = google.maps.event.addListener(inst.map, "idle", function() { 
-		  if (inst.map.getZoom() > 16) inst.map.setZoom(16); 
-		  google.maps.event.removeListener(listener); 
-		});
+	};
+
+	var renderListView = function(list) {
+		if (list.length > 0) 
+		{
+			$("#app_listview").show();
+			$("#app_pager").show();
+			for (var i = 0; i < list.length; i++) {
+				var listItem = list[i];
+				var builder = [];
+				builder.push("<tr>");
+				builder.push("	<td class='listViewRow'>");
+				builder.push("		<strong>" + listItem.name + "</strong>");
+				builder.push("		<i class='icon-info-sign right'></i>");
+				builder.push("  </td>");
+				builder.push("</tr>");
+				$('#listTbl').append(builder.join(""));
+			}
+
+			inst.rightSizeListView();
+		} 
+	};
+
+	inst.rightSizeListView = function() {
+		var h = $(window).height();
+		$("#app_listview").css("height",  h - 350 + "px");
 	};
 
 	return inst;
 };
+
+
 
 
 

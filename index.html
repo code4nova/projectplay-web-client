@@ -23,6 +23,29 @@
 	</head>
 
 	<body>
+		<div id="app_detail_modal" class="modal hide fade">
+			<div id="detail_header" class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3 id='detail_title'></h3>
+			</div>
+			<div class="modal-body">
+				<p>Google Places Page: <span id='detail_googleplacelink'></span></p>
+				<p>Age Groups: <span id="detail_agelevel_text"></span></p>
+				<p>Comments: <span id="detail_comments_text"></span></p>
+				<!--<table>
+					<tr>
+						<td id='detail_comments_label'>Comments:</td>
+						<td id='detail_comments_text'></td>
+					</tr>
+				</table>-->
+			</div>
+			<!--
+			<div class="modal-footer">
+				<a href="#" class="btn">Close</a>
+			</div>
+		    -->
+		</div>
+
 		<div id="side_bar">
 			<div id="branding">
 				<img id="header_img" src="./img/projectplay.png" />
@@ -55,7 +78,7 @@
 						</tbody>
 					</table>
 				</div>
-				<div id="app_pager" class="pagination center">
+				<!--<div id="app_pager" class="pagination center">
 						<ul>
 						    <li><a href="#">Prev</a></li>
 						    <li><a href="#">1</a></li>
@@ -64,7 +87,7 @@
 						    <li><a href="#">4</a></li>
 						    <li><a href="#">Next</a></li>
 					  	</ul>
-				</div>
+				</div>-->
 
 			</div>
 		</div>

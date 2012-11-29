@@ -88,6 +88,10 @@ hr.fancydivider {
 	background-color: #ffffff;
 }
 
+#listTbl td {
+	cursor: pointer;
+}
+
 .pagination.center,
 .pagination.center ul {
     float: left;

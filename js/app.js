@@ -233,13 +233,16 @@ var playApp = function()
 
 				//get google places url
 				$('#detail_googleplacelink').empty();
+				$('#detail_googleplacelink').append('loading...');
 				var placesURL = inst.svc.getPlaceUrl(result.name,
 					function(json) {
 						//console.log(json.url);
 						if (json.url) {
+							$('#detail_googleplacelink').empty();
 							$('#detail_googleplacelink').append("<a href=" + json.url + " target='new'>Click Here.</a>");
 						}
 						else {
+							$('#detail_googleplacelink').empty();
 							$('#detail_googleplacelink').append("N/A");
 						}
 						

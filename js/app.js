@@ -227,6 +227,42 @@ var playApp = function()
 				$('#detail_agelevel_text').empty();
 				$('#detail_agelevel_text').append(result.agelevel);
 
+				//restrooms
+				$('#detail_restrooms').empty();
+				if (result.restrooms == 1) {
+					$('#detail_restrooms').append('None.');
+				} 
+				else if (result.restrooms == 2) {
+					$('#detail_restrooms').append('Inadequate.');
+				}
+				else if (result.restrooms == 3) {
+					$('#detail_restrooms').append('Plenty.');
+				}
+
+				//drinking fountain
+				$('#detail_drinkingfountain').empty();
+				if (result.drinkingw == 1) {
+					$('#detail_drinkingfountain').append('None.');
+				}
+				else if (result.drinkingw == 2) {
+					$('#detail_drinkingfountain').append('Limited.');
+				}
+				else if (result.drinkingw == 3) {
+					$('#detail_drinkingfountain').append('As much as you want.');
+				}
+
+				//seating
+				$('#detail_seating').empty();
+				if (result.seating == 1) {
+					$('#detail_seating').append('Little to no seating.');
+				}
+				else if (result.seating == 2) {
+					$('#detail_seating').append('Inadequate.');
+				}
+				else if (result.seating == 3) {
+					$('#detail_seating').append('Adequate.');
+				}
+
 				//comments
 				$('#detail_comments_text').empty();
 				$('#detail_comments_text').append(result.generalcomments);

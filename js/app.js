@@ -14,6 +14,7 @@ var playApp = function()
 	inst.markers = [];
 	inst.lastSearchResults = [];
 	inst.mapToolTip = null;
+	inst.filters = {};
 
 	inst.initialize = function() {
 		var mapCenter = new google.maps.LatLng(config.startLatLon[0], config.startLatLon[1]);
@@ -41,6 +42,16 @@ var playApp = function()
 		inst.svc = playSvc(config.playUrl);
 
 		inst.mapToolTip = new google.maps.InfoWindow();
+
+		inst.filters = {
+		  	drinkingw: 0,
+		    restrooms: 0,
+		    seating: 0,
+		    shade: 0,
+		    age: '',
+		    address: '',
+		    range: ''
+		};
 	};
 
 	var clickPgList = function(e) {
@@ -58,21 +69,95 @@ var playApp = function()
 
 	var initSidebar = function() {
 		
-		$("#showAllBtn").click(
+		$("#searchBtn").click(
 			function() {
-				showAllPlaygrounds();
+				if ($(inputAddress).val()) {
+					searchByAddress();
+				}
+				else {
+					showAllPlaygrounds();
+				}
 			}
 		);
 
-		$("#addressSearchBtn").click(
+		//init button handlers and logic for filters
+	    var updateRestroomFilter = function(e) {
+      		$('.restroombtngrp').removeClass('active');
+      		$(e.target).addClass('active');
+      		if ($(e.target).attr('id') == 'yesRestroom') {
+      			inst.filters.restrooms = 2;
+      		}
+      		else {
+      			inst.filters.restrooms = 0;
+      		}
+      	};
+      	var updateDrinkingWaterFilter = function(e) {
+      		$('.drinkingwbtngrp').removeClass('active');
+      		$(e.target).addClass('active');
+      		if ($(e.target).attr('id') == 'yesDrinkingW') {
+      			inst.filters.drinkingw = 2;
+      		}
+      		else {
+      			inst.filters.drinkingw = 0;
+      		}
+      	};
+      	var updateSeatingFilter = function(e) {
+      		$('.seatingbtngrp').removeClass('active');
+      		$(e.target).addClass('active');
+      		if ($(e.target).attr('id') == 'yesSeating') {
+      			inst.filters.seating = 2;
+      		}
+      		else {
+      			inst.filters.seating = 0;
+      		}
+      	};
+      	var updateShadeFilter = function(e) {
+      		$('.shadebtngrp').removeClass('active');
+      		$(e.target).addClass('active');
+      		if ($(e.target).attr('id') == 'yesShade') {
+      			inst.filters.shade = 2;
+      		}
+      		else {
+      			inst.filters.shade = 0;
+      		}
+      	};
+      	var updateAgeFilter = function(e) {
+      		$('.agebtngrp').removeClass('active');
+      		$(e.target).addClass('active');
+      		if ($(e.target).attr('id') == 'anyAge') {
+      			inst.filters.age = 2;
+      		}
+      		else if ($(e.target).attr('id') == 'twoToFiveAge') {
+      			inst.filters.age = '2-5';
+      		}
+      		else if ($(e.target).attr('id') == 'fiveToTwelveAge') {
+      			inst.filters.age = '5-12';
+      		}
+      	};
+
+      	$('.restroombtngrp').click(updateRestroomFilter);
+      	$('.drinkingwbtngrp').click(updateDrinkingWaterFilter);
+      	$('.seatingbtngrp').click(updateSeatingFilter);
+      	$('.shadebtngrp').click(updateShadeFilter);
+      	$('.agebtngrp').click(updateAgeFilter);
+      	$('#noRestroom').addClass('active');
+      	$('#noDrinkingW').addClass('active');
+      	$('#noSeating').addClass('active');
+      	$('#noShade').addClass('active');
+      	$('#anyAge').addClass('active');
+
+		$("#results_panel").hide();
+
+		$("#returnBtn").click(
 			function() {
-				searchByAddress();
-				//searchByAddressWithPlacesApi();
+				clearAll();
+				$("#results_panel").hide();
+				$("#app_listview").hide();
+				$("#filter_panel").show();
 			}
 		);
-
-		$("#app_listview").hide();
-		$("#app_pager").hide();
+		//$("#app_listview").hide();
+		//$("#app_pager").hide();
 	};
 
 	var clearAll = function() {
@@ -192,16 +277,77 @@ var playApp = function()
 				var playObj = playData[i];
 				//console.log(playObj);
 
+				var f = {
+					location: false,
+					restrooms: false,
+					drinkingw: false,
+					seating: false,
+					shade: false,
+					agelevel: false
+				};
+
 				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				if (inst.lastCircle) {
 					if (inst.lastCircle.contains(pt)) {
-						filteredList.push(playObj);
+						//filteredList.push(playObj);
+						f.location = true;
 					}
 				}
 				else {
+					//filteredList.push(playObj);
+					f.location = true;
+				}
+
+				if (inst.filters.restrooms) {
+					if (playObj.restrooms >= inst.filters.restrooms) {
+						f.restrooms = true;
+					}
+				}
+				else {
+					f.restrooms = true;
+				}
+
+				if (inst.filters.drinkingw) {
+					if (playObj.drinkingw >= inst.filters.drinkingw) {
+						f.drinkingw = true;
+					}
+				}
+				else {
+					f.drinkingw = true;
+				}
+
+				if (inst.filters.seating) {
+					if (playObj.seating >= inst.filters.seating) {
+						f.seating = true;
+					}
+				}
+				else {
+					f.seating = true;
+				}
+
+				if (inst.filters.shade) {
+					if (playObj.shade >= inst.filters.shade) {
+						f.shade = true;
+					}
+				}
+				else {
+					f.shade = true;
+				}
+
+				if (inst.filters.age) {
+					if (playObj.agelevel.search(inst.filters.age) > -1) {
+						f.agelevel = true;
+					}
+				}
+				else {
+					f.agelevel = true;
+				}
+
+				if (f.location && f.restrooms && f.drinkingw && f.seating && f.shade && f.agelevel) {
 					filteredList.push(playObj);
 				}
 			}
+			//console.dir(filteredList);
 			inst.lastSearchResults = filteredList;
 			renderMarkers(filteredList);
 			renderListView(filteredList);
@@ -351,8 +497,10 @@ var playApp = function()
 	var renderListView = function(list) {
 		if (list.length > 0) 
 		{
+			$("#filter_panel").hide();
+			$("#results_panel").show();
 			$("#app_listview").show();
-			$("#app_pager").show();
+			//$("#app_pager").show();
 			for (var i = 0; i < list.length; i++) {
 				var listItem = list[i];
 				var builder = [];
@@ -399,7 +547,7 @@ var playApp = function()
 
 	inst.rightSizeListView = function() {
 		var h = $(window).height();
-		$("#app_listview").css("height",  h - 290 + "px");
+		$("#app_listview").css("height",  h - 130 + "px");
 	};
 
 	return inst;

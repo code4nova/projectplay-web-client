@@ -40,9 +40,10 @@ html {
 }
 
 .sbtext {
-	font-size: 14px;
+	font-size: larger;
 	font-weight: bold;
 	color: #FFFFFF;
+	vertical-align: middle;
 }
 
 #header_img {
@@ -56,10 +57,18 @@ html {
 	margin: 5px 10px 5px 10px;
 }
 
+#app_panel h2 {
+	color: #FFFFFF;
+	font-size: larger;
+	margin: 0px 0px;
+	padding: 0px 0px;
+}
+
 hr.fancydivider {
   border-top: 1px dotted #22ad29;
   border-bottom: 1px dotted #22ad29;
   height: 2px;
+  margin: 15px 0px;
 }
 
 #app_listview {
@@ -102,4 +111,17 @@ hr.fancydivider {
 
 i.right {
 	float: right;
+}
+
+.fleft {
+	float:left;
+}
+
+#filterTbl {
+
+}
+
+#filterTbl td {
+	padding: 5px;
+	vertical-align: middle;
 }

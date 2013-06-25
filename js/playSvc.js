@@ -26,7 +26,7 @@ var playSvc = function(url) {
 		var geocoder = new google.maps.Geocoder(); 
 		geocoder.geocode(
 		    { address : address, 
-		      region: 'no' 
+		      region: 'US' 
 		    }, 
 		    function(results, status){
 		      caller.apply(null, [results[0]]);

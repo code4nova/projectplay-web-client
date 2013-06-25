@@ -4,11 +4,9 @@
 		<title>Project Play</title>
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="./css/styles.css" type="text/css" media="screen">
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.23/themes/le-frog/jquery-ui.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="./css/bootstrap.min.css" >
 		<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places,geometry" ></script>
 		<script src="http://code.jquery.com/jquery-1.8.0.min.js"></script>
-		<!--<script src="http://code.jquery.com/ui/1.8.23/jquery-ui.min.js"></script>-->
 		<script src="./js/bootstrap.min.js"></script>
 		<script src ="./js/playSvc.js"></script>
 		<script src="./js/app.js" ></script>
@@ -56,42 +54,108 @@
 				<div id="overhang_bar"></div>
 			</div>
 			<div id="app_panel">
-				<a id='showAllBtn' class='btn btn-block btn-medium'>Show All Playgrounds <i class="icon-chevron-right"></i></a>
-				<hr class="fancydivider" /> 
-				<div class="input-append">
-				  <input id="inputAddress" placeholder="Type your address..." size="16" type="text">
-				  <button id="addressSearchBtn" class="btn" type="button">Go</button>
-				</div>
+				<div id="filter_panel">
+					<a id='searchBtn' class='btn btn-block btn-medium'>Search Playgrounds <i class="icon-chevron-right"></i></a>
+					<hr class="fancydivider" />
+					<span class="sbtext">Within</span>
+					<select id="inputDistance" class='input-mini'>
+					  <option>1</option>
+					  <option>2</option>
+					  <option>3</option>
+					  <option>4</option>
+					  <option>5</option>
+					</select>
+					<span class="sbtext"> mile(s) of </span>
+					
+					  <input id="inputAddress" placeholder="This address..." size="18" type="text">
+					  <!--<button id="addressSearchBtn" class="btn" type="button">Go</button>-->
+					
 
-				<span class="sbtext">Within</span>
-				<select id="inputDistance" class='input-mini'>
-				  <option>1</option>
-				  <option>2</option>
-				  <option>3</option>
-				  <option>4</option>
-				  <option>5</option>
-				</select>
-				<span class="sbtext">mile(s) of my location</span>
+					
 
-				<hr class="fancydivider" />
-				
-				<div id="app_listview">
-					<table id="listTbl" class="table table-bordered table-striped">
-						<tbody>
-						</tbody>
+					<hr class="fancydivider" />
+
+					<div class="sbtext"> I care about... </div>
+					<br/>
+					<table id="filterTbl">
+						<tr>
+							<td>
+								<span class="sbtext">Restrooms: </span>
+							</td>
+							<td>
+								<div class="btn-group">
+								    <button id="yesRestroom" class="btn restroombtngrp">Yes</button>
+								    <button id="noRestroom" class="btn restroombtngrp">No</button>
+							    </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="sbtext">Drinking Water: </span>
+							</td>
+							<td>
+								<div class="btn-group">
+								    <button id="yesDrinkingW" class="btn drinkingwbtngrp">Yes</button>
+								    <button id="noDrinkingW" class="btn drinkingwbtngrp">No</button>
+							    </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="sbtext">Seating: </span>
+							</td>
+							<td>
+								<div class="btn-group">
+								    <button id="yesSeating" class="btn seatingbtngrp">Yes</button>
+								    <button id="noSeating" class="btn seatingbtngrp">No</button>
+							    </div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<span class="sbtext">Shade: </span>
+							</td>
+							<td>
+								<div class="btn-group">
+								    <button id="yesShade" class="btn shadebtngrp">Yes</button>
+								    <button id="noShade" class="btn shadebtngrp">No</button>
+							    </div>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<br/>
+								<span class="sbtext">Age Level: </span>
+								<div class="btn-group">
+								    <button id="anyAge" class="btn agebtngrp">Any</button>
+								    <button id="twoToFiveAge" class="btn agebtngrp">2-5</button>
+								    <button id="fiveToTwelveAge" class="btn agebtngrp">5-12</button>
+							    </div>
+							</td>
+						</tr>
 					</table>
+					<hr class="fancydivider" />				
 				</div>
-				<!--<div id="app_pager" class="pagination center">
-						<ul>
-						    <li><a href="#">Prev</a></li>
-						    <li><a href="#">1</a></li>
-						    <li><a href="#">2</a></li>
-						    <li><a href="#">3</a></li>
-						    <li><a href="#">4</a></li>
-						    <li><a href="#">Next</a></li>
-					  	</ul>
-				</div>-->
-
+				<div id="results_panel">
+					<a id='returnBtn' class='btn btn-block btn-medium'><i class="icon-chevron-left"></i> Clear Search and Go Back</a>
+					<br/>
+					<div id="app_listview">
+						<table id="listTbl" class="table table-bordered table-striped">
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<!--<div id="app_pager" class="pagination center">
+							<ul>
+							    <li><a href="#">Prev</a></li>
+							    <li><a href="#">1</a></li>
+							    <li><a href="#">2</a></li>
+							    <li><a href="#">3</a></li>
+							    <li><a href="#">4</a></li>
+							    <li><a href="#">Next</a></li>
+						  	</ul>
+					</div>-->
+				</div>
 			</div>
 			<div style='position:absolute;left:5px;bottom:5px;'><img src="./img/powered-by-google-on-non-white.png" /></div>
 		</div>

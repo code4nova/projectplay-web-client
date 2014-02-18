@@ -1,0 +1,46 @@
+html {
+
+}
+
+body {
+    background: url(../img/1680.png);
+}
+
+.whitespacer {
+    background-color: #FFFFFF;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+    width: 100%;
+    height: 30px;
+    position: relative;
+    top: 100px;
+}
+
+.navItm {
+    float:left;
+    position: relative;
+    top: 50px;
+    font-size: 90%;
+    font-weight: bold;
+    font-family: Helvetica, Helvetica, Arial, Sans-Serif;
+    text-align: center;
+    margin-left: 2px;
+    white-space:nowrap;
+}
+
+/*#aboutNav { width: 170px }
+#playisNav { width: 100px }
+#whereNav { width: 200px }
+#contactNav { width: 100px }
+#galleryNav { width: 200px }*/
+
+.playBtn {
+    background-color: #93288D;
+    color: #FFFFFF;
+    padding: 6px 10px;
+    border: 2px #FFFFFF solid;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}

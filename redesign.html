@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Play</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript">
+        WebFontConfig = {
+            google: { families: [ 'Open+Sans+Condensed:700:latin' ] }
+        };
+        (function() {
+            var wf = document.createElement('script');
+            wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+                    '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+            wf.type = 'text/javascript';
+            wf.async = 'true';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(wf, s);
+        })(); </script>
+    <link rel="stylesheet" href="./css/redesign.css" type="text/css" media="screen">
+
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places,geometry" ></script>
+    <script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script src ="./js/playSvc.js"></script>
+    <script src="./js/app.js" ></script>
+
+    <script>
+        var app;
+        $(document).ready(function() {
+            app = playApp(); app.initialize();
+            $(window).resize(app.rightSizeListView);
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="header">
+        <div class="navItm">
+            <div class="whitespacer"></div>
+        </div>
+        <div class="navItm">
+            <img src="img/projectplay-logo.png" />
+        </div>
+        <div class="navItm">
+            <div class="whitespacer"></div>
+        </div>
+
+        <div id="aboutNav" class="navItm">
+            <div class="navBtn float-shadow">
+                <img src="img/nav-icons-about-projectplay.png" />
+                <div class="playBtn">ABOUT PROJECT PLAY</div>
+            </div>
+        </div>
+
+        <div id="playisNav" class="navItm">
+            <div class="navBtn float-shadow">
+                <img src="img/nav-icons-playis-projectplay.png" />
+                <div class="playBtn">PLAY IS...</div>
+            </div>
+        </div>
+
+        <div id="whereNav" class="navItm">
+            <div class="navBtn float-shadow">
+                <img src="img/nav-icons-wheredoyouplay-projectplay.png" />
+                <div class="playBtn">WHERE DO YOU PLAY?</div>
+            </div>
+        </div>
+
+        <div id="contactNav" class="navItm">
+            <div class="navBtn float-shadow">
+                <img src="img/nav-icons-contact-projectplay.png" />
+                <div class="playBtn">CONTACT</div>
+            </div>
+        </div>
+
+        <div id="galleryNav" class="navItm">
+            <div class="navBtn float-shadow">
+                <img src="img/nav-icons-gallery-projectplay.png" />
+                <div class="playBtn">PHOTO GALLERY</div>
+            </div>
+        </div>
+
+        <div class="navItm">
+            <div class="whitespacer"></div>
+        </div>
+    </div>
+    <div id="main">
+        <div class="gutter"> </div>
+        <div class="sidebar">
+            <img id="showAllBtn" class="" src="img/show_playspaces_button.png" />
+            <br/><br/>
+            <div >
+                <input id="inputAddress" placeholder="This address..." size="17" type="text"><span id="addressGoBtn">GO</span>
+            </div>
+            <div id="results_panel">
+                <a id='returnBtn' class='btn btn-block btn-medium'><i class="icon-chevron-left"></i> Clear Search and Go Back</a>
+                <br/>
+                <div id="app_listview">
+                    <table id="listTbl" class="table table-bordered table-striped">
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="map_canvas">
+
+    </div>
+</body>
+</html>

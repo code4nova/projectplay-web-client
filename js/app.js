@@ -6,52 +6,44 @@ var playApp = function()
 		startLatLon: [38.818860, -77.091497],
 		startZoom: 13,
 	    logo: "./img/aplays.png",
-	    playUrl: "http://projectplay.herokuapp.com/"
+	    playUrl: "http://alexandriaplays.codefornova.org/"
 	};
 
 	inst.lastCircle = null;
 	inst.addressCenterPoint = null;
 	inst.markers = [];
 	inst.lastSearchResults = [];
+    inst.lastSearchLayer = null;
 	inst.mapToolTip = null;
 	inst.filters = {};
 
 	inst.initialize = function() {
-		var mapCenter = new google.maps.LatLng(config.startLatLon[0], config.startLatLon[1]);
-		var zoomLvl = config.startZoom;
+        inst.map = L.map('map_canvas').setView([config.startLatLon[0], config.startLatLon[1]], config.startZoom);
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(inst.map);
 
-		var mapOptions = {
-		  zoom: zoomLvl,
-		  center: mapCenter,
-		  mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-		inst.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+        if (config.title) {
+            document.title = config.title;
+        }
 
-		//init branding stuff from app.config
-		if (config.logo) {
-			$('#header_img').attr('src', config.logo);
-		}
-		
-		if (config.title) {
-			document.title = config.title;
-		}
+        $(app_listview).click(clickPgList);
 
-		$(app_listview).click(clickPgList);
+        initSidebar();
+        inst.svc = playSvc(config.playUrl);
 
-		initSidebar();
-		inst.svc = playSvc(config.playUrl);
+        /*inst.mapToolTip = new google.maps.InfoWindow();
 
-		inst.mapToolTip = new google.maps.InfoWindow();
-
-		inst.filters = {
-		  	drinkingw: 0,
-		    restrooms: 0,
-		    seating: 0,
-		    shade: 0,
-		    age: '',
-		    address: '',
-		    range: ''
-		};
+        inst.filters = {
+              drinkingw: 0,
+            restrooms: 0,
+            seating: 0,
+            shade: 0,
+            age: '',
+            address: '',
+            range: ''
+        };*/
 	};
 
 	var clickPgList = function(e) {
@@ -68,8 +60,13 @@ var playApp = function()
 	};
 
 	var initSidebar = function() {
-		
-		$("#searchBtn").click(
+		$("#showAllBtn").click(
+            function() {
+                showAllPlaygrounds();
+            }
+        );
+
+		/*$("#searchBtn").click(
 			function() {
 				if ($(inputAddress).val()) {
 					searchByAddress();
@@ -156,8 +153,9 @@ var playApp = function()
 				$("#filter_panel").show();
 			}
 		);
-		//$("#app_listview").hide();
-		//$("#app_pager").hide();
+
+		//$("#app_pager").hide();*/
+        $("#app_listview").hide();
 	};
 
 	var clearAll = function() {
@@ -249,25 +247,29 @@ var playApp = function()
 	};
 
 	var clearMarkers = function() {
-	  for (var i = 0; i < inst.markers.length; i++ ) {
+	  /*for (var i = 0; i < inst.markers.length; i++ ) {
 	    inst.markers[i].setMap(null);
-	  }
+	  }*/
+      if (inst.lastSearchLayer) {
+          inst.lastSearchLayer.clearLayers();
+      }
+      inst.markers = [];
 	};
 
 	var clearCircle = function() {
-		if (inst.lastCircle) {
+		/*if (inst.lastCircle) {
 		  	inst.lastCircle.setMap(null);
 		  	inst.lastCircle = null;
 		}
 		if (inst.addressCenterPoint) {
 			inst.addressCenterPoint.setMap(null);
 			inst.addressCenterPoint = null;
-		}
+		}*/
 	};
 
 	var clearListView = function() {
-		$('#listTbl').html("");
-		$('#app_pager').hide();
+		//$('#listTbl').html("");
+		//$('#app_pager').hide();
 	};
 
 	var renderPlaygrounds = function(playData) {
@@ -286,7 +288,9 @@ var playApp = function()
 					agelevel: false
 				};
 
-				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
+                filteredList.push(playObj);
+
+				/*var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				if (inst.lastCircle) {
 					if (inst.lastCircle.contains(pt)) {
 						//filteredList.push(playObj);
@@ -345,7 +349,7 @@ var playApp = function()
 
 				if (f.location && f.restrooms && f.drinkingw && f.seating && f.shade && f.agelevel) {
 					filteredList.push(playObj);
-				}
+				}*/
 			}
 			//console.dir(filteredList);
 			inst.lastSearchResults = filteredList;
@@ -438,38 +442,47 @@ var playApp = function()
 	};
 
 	var zoomToMarkerBounds = function() {
-		var bounds = new google.maps.LatLngBounds();
+		/*var bounds = new google.maps.LatLngBounds();
 		var extent = [];
 		for (var i = 0; i < inst.markers.length; i++ ) {
 	    	bounds.extend(inst.markers[i].position);
 	    }
 	    
-	    inst.map.fitBounds(bounds);
+	    inst.map.fitBounds(bounds);*/
+        // TODO: Implement in Leaflet API
 	};
 
 	var renderMarkers = function(list) {
-		for (var i = 0; i < list.length; i++) {
+		inst.lastSearchLayer = L.featureGroup();
+        for (var i = 0; i < list.length; i++) {
 			var playObj = list[i];
 
-			var image = new google.maps.MarkerImage('./img/playground_marker.png',
-						new google.maps.Size(32, 37), //icon size
-					    new google.maps.Point(0,0), //origin
-					    new google.maps.Point(16, 37) //offset
-					);
-			var pt = new google.maps.LatLng(playObj.lat, playObj.long);
+            var playIcon = L.icon({
+                iconUrl: 'img/playspace_icon.png',
+                iconSize:     [27, 31], // size of the icon
+                iconAnchor:   [13.5, 94], // point of the icon which will correspond to marker's location
+                popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+            });
+
+
+			//var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 			
 			var addMarker = function() {
-				var marker = new google.maps.Marker({
+				/*var marker = new google.maps.Marker({
 		            id: playObj.id,
 		            position: pt,
 		            map: inst.map,
 		            name: playObj.name,
 		            icon: image
-		        });
+		        });*/
 		        //marker.set("id", playObj.id);
+                var marker = L.marker([playObj.lat, playObj.long], {icon: playIcon}).addTo(inst.map);
+                //var popHtml = getPopupHtml(playObj);
+                marker.bindPopup("Test");
+                inst.lastSearchLayer.addLayer(marker);
 		        inst.markers.push(marker);
 		        
-		        google.maps.event.addListener(marker, 'click', 
+		        /*google.maps.event.addListener(marker, 'click',
 		        		function (e) {
 		        			inst.clickPgMarker(marker.id);
 		        		}
@@ -487,7 +500,7 @@ var playApp = function()
                 	this.setIcon('./img/playground_marker.png');
                 	$('#' + this.id).css('background-color', '');
                 	inst.mapToolTip.close();
-                });
+                });*/
 			}
 
 			addMarker();
@@ -497,24 +510,23 @@ var playApp = function()
 	var renderListView = function(list) {
 		if (list.length > 0) 
 		{
-			$("#filter_panel").hide();
-			$("#results_panel").show();
+			//$("#filter_panel").hide();
+			//$("#results_panel").show();
 			$("#app_listview").show();
 			//$("#app_pager").show();
 			for (var i = 0; i < list.length; i++) {
 				var listItem = list[i];
 				var builder = [];
-				builder.push("<tr>");
-				builder.push("	<td ");
+				builder.push("<div ");
 				builder.push(" id='");
 				builder.push(listItem.id);
 				builder.push("' ");
-				builder.push(" class='listViewRow'>");
-				builder.push("		<strong>" + listItem.name + "</strong>");
+                var classes = (i % 2 != 0) ? "listViewRow" : "listViewRow oddRow"
+                builder.push(" class='" + classes + "'>");
+                builder.push("		<strong>" + listItem.name + "</strong>");
 				builder.push("		<i class='icon-info-sign right'></i>");
-				builder.push("  </td>");
-				builder.push("</tr>");
-				$('#listTbl').append(builder.join(""));
+				builder.push("</div>");
+                $("#app_listview").append(builder.join(""));
 			}
 
 			inst.rightSizeListView();
@@ -546,8 +558,8 @@ var playApp = function()
 	};
 
 	inst.rightSizeListView = function() {
-		var h = $(window).height();
-		$("#app_listview").css("height",  h - 130 + "px");
+		//var h = $(window).height();
+		//$("#app_listview").css("height",  h - 130 + "px");
 	};
 
 	return inst;

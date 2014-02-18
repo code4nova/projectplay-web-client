@@ -76,6 +76,6 @@ var playSvc = function(url) {
 	return inst;
 };
 
-google.maps.Circle.prototype.contains = function(latLng) {
-  return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
-}
+//google.maps.Circle.prototype.contains = function(latLng) {
+//  return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
+//}

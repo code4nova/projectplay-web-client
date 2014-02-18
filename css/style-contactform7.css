@@ -1,0 +1,188 @@
+
+/************************************************************************************
+Contact Form 7 - Where do you play, Submit a park
+*************************************************************************************/
+#wpcf7-f63-p12-o2, #wpcf7-f62-p12-o1 {
+    width:47.5%;
+    min-height:526px;
+    position:relative;
+}
+#wpcf7-f63-p12-o2 {
+    float:right;
+}
+#wpcf7-f62-p12-o1 {
+    float:left;
+}
+#wpcf7-f63-p12-o2 .form-row, #wpcf7-f62-p12-o1 .form-row {
+    padding-top:14px;
+}
+#wpcf7-f63-p12-o2 .submit-row, #wpcf7-f62-p12-o1 .submit-row {
+    position:absolute;
+    bottom:0px;
+    left:0px;
+}
+#wpcf7-f63-p12-o2 h3, #wpcf7-f62-p12-o1 h3 {
+    margin:0;
+    padding:0 0 6px 0;
+    font-size:99%;
+    color:#93288d;
+    text-transform:uppercase;
+    font-weight:bold;
+}
+#wpcf7-f63-p12-o2 p, #wpcf7-f62-p12-o1 p {
+   padding:0 0 8px 0;
+    margin:0;
+}
+#wpcf7-f63-p12-o2 label, #wpcf7-f62-p12-o1 label {
+    color:#93288d;
+    font-weight:bold;
+}
+#wpcf7-f63-p12-o2 input[type=text], #wpcf7-f63-p12-o2 textarea, #wpcf7-f62-p12-o1 input[type=text], #wpcf7-f62-p12-o1 textarea {
+    width:100%;
+}
+#wpcf7-f63-p12-o2 input[type=text], #wpcf7-f62-p12-o1 input[type=text] {
+    height:18px;
+}
+#wpcf7-f63-p12-o2 textarea {
+	resize:none;
+    height:218px;
+}
+#wpcf7-f63-p12-o2 input[type='submit'], #wpcf7-f62-p12-o1 input[type='submit'] {
+    background:url('../images/button-submit.png') no-repeat;
+    border:none;
+    text-align:center;
+    width:87px;
+    height:26px;
+    padding:3px 2px 5px 0;
+    margin:0;
+    color:white;
+    text-transform:uppercase;
+    font-weight:bold;
+}
+#wpcf7-f62-p12-o1 #features span.wpcf7-list-item {
+    display:block;
+    margin-bottom:8px !important;
+	margin-left: 0 !important;
+	height:22px;
+}
+#wpcf7-f62-p12-o1 span.other-features {
+    position:absolute;
+    bottom:67px;
+    left:76px;
+}
+#wpcf7-f62-p12-o1 input[type=text]#other-features {
+    height:14px;
+    width:70% !important;
+}
+
+
+/************************************************************************************
+Contact Form 7 - Contact
+*************************************************************************************/
+.email-row {
+    width:100%;
+    clear:both;
+    /*-webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; */
+    font-size:0.86em;
+}
+div.email-row.margin-bottom-8 {
+    margin-bottom:8px;
+}
+div.email-row.padding-top-8 {
+    padding-top:8px;
+}
+.email-row p, .email-row label {
+    color:#93288d;
+    font-weight:bold;
+    font-size:115%;
+    margin:0;
+    padding:0;
+}
+.email-row .column-fourth {width: 20.5%;}
+.email-row .column-half {width: 47%;}
+.email-row .column-full {width: 100%;}
+.email-row .column-fourth, .email-row .column-half, .email-row .column-full {
+        float: left;
+        margin-right: 6%;
+}
+.email-row .last { margin-right:0 !important; }
+
+.email-row  input {height:30px;}
+
+.email-row input[type=text], .email-row input[type='email'], .email-row textarea {
+    width:100%;
+    max-width:100% !important;
+    padding: 1% 2%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; 
+    margin:0 !important;
+}
+.email-row-specialformat  input[type='submit'] {
+    background:url('../images/button-submit.png') no-repeat;
+    border:none;
+    text-align:center;
+    width:87px;
+    height:26px;
+    padding:3px 2px 5px 0;
+    margin:0;
+    color:white;
+    text-transform:uppercase;
+    font-weight:bold;
+    float:right;
+}
+.email-row-specialformat .ajax-loader {
+    float:right;
+}
+.email-row-specialformat {
+    width:100%;
+    padding:10px 0;
+    clear:both;
+}
+.email-row-specialformat p {
+    margin:0;
+    padding:0;
+}
+.email-row-specialformat p img {
+    
+}
+
+/************************************************************************************
+Contact Form 7 - All
+*************************************************************************************/
+span.wpcf7-not-valid-tip, span.wpcf7-not-valid-tip-no-ajax {
+    left: 10px !important;
+    top:4px !important;
+    background:#ebebeb !important;
+    color: #594a42;
+    font-size:0.82em !important;
+    line-height:140% !important;
+    font-weight:normal !important;
+    width: 250px !important;
+    padding: 3px;
+}
+div.wpcf7-response-output {
+    margin: 2em 0.5em 1em;
+    padding: 0.2em !important;
+    text-align:center;
+}
+.wpcf7-validation-errors, .wpcf7-mail-sent-ng, .wpcf7-mail-sent-ok {
+    width:99%;
+    margin: 2em 0em 1em -0.05em !important;
+    padding: 0.1em;
+    line-height:1em;
+     color: #594a42;
+    position:absolute;
+    bottom:-48px;
+    left:0px;
+    z-index:10;
+    background:#ebebeb !important;
+}
+.wpcf7-mail-sent-ok {
+    border:2px solid #8cc645 !important;
+}
+.wpcf7-validation-errors, .wpcf7-mail-sent-ng {
+    border:2px solid red !important;
+}

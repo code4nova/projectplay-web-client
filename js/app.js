@@ -6,23 +6,31 @@ var playApp = function()
 		startLatLon: [38.818860, -77.091497],
 		startZoom: 13,
 	    logo: "./img/aplays.png",
-	    playUrl: "http://alexandriaplays.codefornova.org/"
+	    playUrl: "http://api.alexandriaplays.org/"
 	};
 
 	inst.lastCircle = null;
 	inst.addressCenterPoint = null;
 	inst.markers = [];
 	inst.lastSearchResults = [];
-    inst.lastSearchLayer = null;
 	inst.mapToolTip = null;
 	inst.filters = {};
 
 	inst.initialize = function() {
-        inst.map = L.map('map_canvas').setView([config.startLatLon[0], config.startLatLon[1]], config.startZoom);
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © OpenStreetMap contributors',
-            maxZoom: 18
-        }).addTo(inst.map);
+		var mapCenter = new google.maps.LatLng(config.startLatLon[0], config.startLatLon[1]);
+		var zoomLvl = config.startZoom;
+
+		var mapOptions = {
+		  zoom: zoomLvl,
+		  center: mapCenter,
+		  mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		inst.map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+		//init branding stuff from app.config
+		if (config.logo) {
+			$('#header_img').attr('src', config.logo);
+		}
 
         if (config.title) {
             document.title = config.title;
@@ -33,7 +41,7 @@ var playApp = function()
         initSidebar();
         inst.svc = playSvc(config.playUrl);
 
-        /*inst.mapToolTip = new google.maps.InfoWindow();
+		inst.mapToolTip = new google.maps.InfoWindow();
 
         inst.filters = {
               drinkingw: 0,
@@ -43,20 +51,16 @@ var playApp = function()
             age: '',
             address: '',
             range: ''
-        };*/
+        };
 	};
 
 	var clickPgList = function(e) {
 		var target = e.target;
 
 		var limit = 5;
-		while (limit > 0 && target.tagName.toLowerCase() != "td") {
-			target = target.parentNode;
-			limit--;
-		}
-		//console.log(target);
+		targetid = $(target).closest('.listViewRow').attr("id");
 
-		renderDetailModal(target.id);
+		renderDetailModal(targetid);
 	};
 
 	var initSidebar = function() {
@@ -66,7 +70,7 @@ var playApp = function()
             }
         );
 
-		/*$("#searchBtn").click(
+		$("#searchBtn").click(
 			function() {
 				if ($(inputAddress).val()) {
 					searchByAddress();
@@ -77,71 +81,7 @@ var playApp = function()
 			}
 		);
 
-		//init button handlers and logic for filters
-	    var updateRestroomFilter = function(e) {
-      		$('.restroombtngrp').removeClass('active');
-      		$(e.target).addClass('active');
-      		if ($(e.target).attr('id') == 'yesRestroom') {
-      			inst.filters.restrooms = 2;
-      		}
-      		else {
-      			inst.filters.restrooms = 0;
-      		}
-      	};
-      	var updateDrinkingWaterFilter = function(e) {
-      		$('.drinkingwbtngrp').removeClass('active');
-      		$(e.target).addClass('active');
-      		if ($(e.target).attr('id') == 'yesDrinkingW') {
-      			inst.filters.drinkingw = 2;
-      		}
-      		else {
-      			inst.filters.drinkingw = 0;
-      		}
-      	};
-      	var updateSeatingFilter = function(e) {
-      		$('.seatingbtngrp').removeClass('active');
-      		$(e.target).addClass('active');
-      		if ($(e.target).attr('id') == 'yesSeating') {
-      			inst.filters.seating = 2;
-      		}
-      		else {
-      			inst.filters.seating = 0;
-      		}
-      	};
-      	var updateShadeFilter = function(e) {
-      		$('.shadebtngrp').removeClass('active');
-      		$(e.target).addClass('active');
-      		if ($(e.target).attr('id') == 'yesShade') {
-      			inst.filters.shade = 2;
-      		}
-      		else {
-      			inst.filters.shade = 0;
-      		}
-      	};
-      	var updateAgeFilter = function(e) {
-      		$('.agebtngrp').removeClass('active');
-      		$(e.target).addClass('active');
-      		if ($(e.target).attr('id') == 'anyAge') {
-      			inst.filters.age = 2;
-      		}
-      		else if ($(e.target).attr('id') == 'twoToFiveAge') {
-      			inst.filters.age = '2-5';
-      		}
-      		else if ($(e.target).attr('id') == 'fiveToTwelveAge') {
-      			inst.filters.age = '5-12';
-      		}
-      	};
 
-      	$('.restroombtngrp').click(updateRestroomFilter);
-      	$('.drinkingwbtngrp').click(updateDrinkingWaterFilter);
-      	$('.seatingbtngrp').click(updateSeatingFilter);
-      	$('.shadebtngrp').click(updateShadeFilter);
-      	$('.agebtngrp').click(updateAgeFilter);
-      	$('#noRestroom').addClass('active');
-      	$('#noDrinkingW').addClass('active');
-      	$('#noSeating').addClass('active');
-      	$('#noShade').addClass('active');
-      	$('#anyAge').addClass('active');
 
 		$("#results_panel").hide();
 
@@ -149,13 +89,14 @@ var playApp = function()
 			function() {
 				clearAll();
 				$("#results_panel").hide();
-				$("#app_listview").hide();
+				//$("#app_listview").hide();
 				$("#filter_panel").show();
 			}
 		);
 
 		//$("#app_pager").hide();*/
-        $("#app_listview").hide();
+        //$("#app_listview").hide();
+        $('#returnBtn').hide();
 	};
 
 	var clearAll = function() {
@@ -172,9 +113,39 @@ var playApp = function()
 
 	var searchByAddress = function() {
 		clearAll();
+        getFilters();
 		var address = $('#inputAddress').val();
 		inst.svc.geoCodeAddress(address, function(data) { renderAddressSearch(data); });
 	};
+
+    var getFilters = function() {
+
+        var filtRestroomVal = $("input:radio[name='filtRestroom']:checked").val();
+
+        var filtDrinkingWVal = $("input:radio[name='filtDrinkingW']:checked").val();
+
+        var filtSeatingVal = $("input:radio[name='filtSeating']:checked").val();
+
+        var filtShadeVal = $("input:radio[name='filtShade']:checked").val();
+
+        var filtAgeVal = $("input:radio[name='filtAge']:checked").val();
+
+        inst.filters.restrooms = (filtRestroomVal == "yes") ? 2 : 0;
+        inst.filters.drinkingw = (filtRestroomVal == "yes") ? 2: 0;
+        inst.filters.seating = (filtSeatingVal == "yes") ? 2 : 0;
+        inst.filters.shade = (filtShadeVal == "yes") ? 2 : 0;
+        inst.filters.age = (function() {
+            if (filtAgeVal == "twotofive") {
+                return "2-5"
+            }
+            else if (filtAgeVal == "fiveto12") {
+                return "5-12"
+            }
+            else {
+                return ""
+            }
+        })();
+    };
 
 	var searchByAddressWithPlacesApi = function() {
 		clearAll();
@@ -247,9 +218,9 @@ var playApp = function()
 	};
 
 	var clearMarkers = function() {
-	  /*for (var i = 0; i < inst.markers.length; i++ ) {
+	  for (var i = 0; i < inst.markers.length; i++ ) {
 	    inst.markers[i].setMap(null);
-	  }*/
+	  }
       if (inst.lastSearchLayer) {
           inst.lastSearchLayer.clearLayers();
       }
@@ -257,19 +228,20 @@ var playApp = function()
 	};
 
 	var clearCircle = function() {
-		/*if (inst.lastCircle) {
+		if (inst.lastCircle) {
 		  	inst.lastCircle.setMap(null);
 		  	inst.lastCircle = null;
 		}
 		if (inst.addressCenterPoint) {
 			inst.addressCenterPoint.setMap(null);
 			inst.addressCenterPoint = null;
-		}*/
+		}
 	};
 
 	var clearListView = function() {
 		//$('#listTbl').html("");
 		//$('#app_pager').hide();
+        $('#returnBtn').hide();
 	};
 
 	var renderPlaygrounds = function(playData) {
@@ -288,21 +260,19 @@ var playApp = function()
 					agelevel: false
 				};
 
-                filteredList.push(playObj);
-
-				/*var pt = new google.maps.LatLng(playObj.lat, playObj.long);
+				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				if (inst.lastCircle) {
 					if (inst.lastCircle.contains(pt)) {
-						//filteredList.push(playObj);
+						filteredList.push(playObj);
 						f.location = true;
 					}
 				}
 				else {
-					//filteredList.push(playObj);
+					filteredList.push(playObj);
 					f.location = true;
 				}
 
-				if (inst.filters.restrooms) {
+                if (inst.filters.restrooms) {
 					if (playObj.restrooms >= inst.filters.restrooms) {
 						f.restrooms = true;
 					}
@@ -349,9 +319,9 @@ var playApp = function()
 
 				if (f.location && f.restrooms && f.drinkingw && f.seating && f.shade && f.agelevel) {
 					filteredList.push(playObj);
-				}*/
+				}
 			}
-			//console.dir(filteredList);
+
 			inst.lastSearchResults = filteredList;
 			renderMarkers(filteredList);
 			renderListView(filteredList);
@@ -367,7 +337,6 @@ var playApp = function()
 			var result = inst.lastSearchResults[i];
 
 			if (id == result.id) {
-				//console.log(result);
 
 				//title
 				$('#detail_title').empty();
@@ -417,79 +386,53 @@ var playApp = function()
 				$('#detail_comments_text').empty();
 				$('#detail_comments_text').append(result.generalcomments);
 
-				//get google places url
-				$('#detail_googleplacelink').empty();
-				$('#detail_googleplacelink').append('loading...');
-				var placesURL = inst.svc.getPlaceUrl(result.name,
-					function(json) {
-						//console.log(json.url);
-						if (json.url) {
-							$('#detail_googleplacelink').empty();
-							$('#detail_googleplacelink').append("<a href=" + json.url + " target='new'>Click Here.</a>");
-						}
-						else {
-							$('#detail_googleplacelink').empty();
-							$('#detail_googleplacelink').append("N/A");
-						}
-						
-					}
-				);
 			}
 		}
 
-		$('#app_detail_modal').modal();
+		$('#app_detail_modal').modal({overlayClose: true, closeClass: "close" });
 
 	};
 
 	var zoomToMarkerBounds = function() {
-		/*var bounds = new google.maps.LatLngBounds();
+		var bounds = new google.maps.LatLngBounds();
 		var extent = [];
 		for (var i = 0; i < inst.markers.length; i++ ) {
 	    	bounds.extend(inst.markers[i].position);
 	    }
 	    
-	    inst.map.fitBounds(bounds);*/
-        // TODO: Implement in Leaflet API
+	    inst.map.fitBounds(bounds);
 	};
 
 	var renderMarkers = function(list) {
-		inst.lastSearchLayer = L.featureGroup();
         for (var i = 0; i < list.length; i++) {
 			var playObj = list[i];
 
-            var playIcon = L.icon({
-                iconUrl: 'img/playspace_icon.png',
-                iconSize:     [27, 31], // size of the icon
-                iconAnchor:   [13.5, 94], // point of the icon which will correspond to marker's location
-                popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
-            });
-
-
-			//var pt = new google.maps.LatLng(playObj.lat, playObj.long);
+			var image = new google.maps.MarkerImage('./img/playspace_icon.png',
+						new google.maps.Size(32, 37), //icon size
+					    new google.maps.Point(0,0), //origin
+					    new google.maps.Point(16, 37) //offset
+					);
+			var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 			
 			var addMarker = function() {
-				/*var marker = new google.maps.Marker({
+				var marker = new google.maps.Marker({
 		            id: playObj.id,
 		            position: pt,
 		            map: inst.map,
 		            name: playObj.name,
 		            icon: image
-		        });*/
+		        });
 		        //marker.set("id", playObj.id);
-                var marker = L.marker([playObj.lat, playObj.long], {icon: playIcon}).addTo(inst.map);
-                //var popHtml = getPopupHtml(playObj);
-                marker.bindPopup("Test");
-                inst.lastSearchLayer.addLayer(marker);
 		        inst.markers.push(marker);
 		        
-		        /*google.maps.event.addListener(marker, 'click',
+		        google.maps.event.addListener(marker, 'click', 
 		        		function (e) {
 		        			inst.clickPgMarker(marker.id);
 		        		}
 		        );
 
 		        google.maps.event.addListener(marker, "mouseover", function(event) {
-                	this.setIcon('./img/playground_marker_green.png');
+                	//this.setIcon('./img/playspace_icon.png');
                 	$('#' + this.id).css('background-color', '#aedd52');
 
                 	inst.mapToolTip.setContent('<p><strong>' + this.name + '</strong></p>');
@@ -497,10 +440,10 @@ var playApp = function()
                 });
 
                 google.maps.event.addListener(marker, "mouseout", function(event) {
-                	this.setIcon('./img/playground_marker.png');
+                	//this.setIcon('./img/playspace_icon.png');
                 	$('#' + this.id).css('background-color', '');
                 	inst.mapToolTip.close();
-                });*/
+                });
 			}
 
 			addMarker();
@@ -510,9 +453,10 @@ var playApp = function()
 	var renderListView = function(list) {
 		if (list.length > 0) 
 		{
-			//$("#filter_panel").hide();
-			//$("#results_panel").show();
+			$("#filter_panel").hide();
+			$("#results_panel").show();
 			$("#app_listview").show();
+            $("#returnBtn").show();
 			//$("#app_pager").show();
 			for (var i = 0; i < list.length; i++) {
 				var listItem = list[i];
@@ -536,7 +480,7 @@ var playApp = function()
 					for (var i = 0; i < inst.markers.length; i++) {
 						var m = inst.markers[i];
 						if (m.id == this.id) {
-							m.setIcon('./img/playground_marker_green.png');
+							//m.setIcon('./img/playground_marker_green.png');
 							inst.mapToolTip.setContent('<p><strong>' + m.name + '</strong></p>');
                 			inst.mapToolTip.open(inst.map, m);
 						}
@@ -547,13 +491,12 @@ var playApp = function()
 					for (var i = 0; i < inst.markers.length; i++) {
 						var m = inst.markers[i];
 						if (m.id == this.id) {
-							m.setIcon('./img/playground_marker.png');
+							//m.setIcon('./img/playground_marker.png');
 							inst.mapToolTip.close();
 						}
 					}
 				}
 			);
-
 		} 
 	};
 

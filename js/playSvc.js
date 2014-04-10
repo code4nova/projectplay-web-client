@@ -34,7 +34,7 @@ var playSvc = function(url) {
 		);
 	};
 
-	inst.getPlaceUrl = function(name, callback) {
+	/*inst.getPlaceUrl = function(name, callback) {
 		var caller =  callback;
 
 		var getPlaceUrl = inst.baseUrl + 'playgrounds/getPlacesURLforPlayground.json?name=' + encodeURI(name);
@@ -51,7 +51,7 @@ var playSvc = function(url) {
 		       caller.apply(null, [false]);
 		    }
 		});
-	};
+	};*/
 
 	inst.PlacesApiSearch = function(address, radius, callback) {
 		var caller = callback;
@@ -76,6 +76,6 @@ var playSvc = function(url) {
 	return inst;
 };
 
-//google.maps.Circle.prototype.contains = function(latLng) {
-//  return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
-//}
+google.maps.Circle.prototype.contains = function(latLng) {
+  return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
+}

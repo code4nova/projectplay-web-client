@@ -78,11 +78,66 @@
             <div id="content-front-sidebar" class="content-frontpage-width-left left">
                 <img id="showAllBtn" class="imgBtn" src="img/show_playspaces_button.png" />
 
-                <div id="app_listview">
-                    <!--<table id="listTbl" class="table table-bordered table-striped">
-                        <tbody>
-                        </tbody>
-                    </table>-->
+                <div id="filter_panel">
+
+                    <div class="filter">
+                        <span class="sbtext">Within</span>
+                        <select id="inputDistance" class='input-mini'>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                        <span class="sbtext"> mile(s) of </span>
+                    </div>
+
+                    <input id="inputAddress" placeholder="This address..." size="12" type="text">
+                    <br/><br/>
+                    <div id="advancedFilterPanel">
+
+                    <div class="sbtext"> I care about... </div>
+                    <hr />
+
+                    <div class="label">Restrooms:</div>
+                    <div class="btn-group">
+                        <input type="radio" id="filtRestroomY" name="filtRestroom" value="yes"><label for="filtRestroomY">Yes</label>
+                        <input type="radio" id="filtRestroomN" name="filtRestroom" value="no" checked="checked"><label for="filtRestroomN">No</label>
+                    </div>
+
+                    <div class="label">Drinking Water:</div>
+                    <div class="btn-group">
+                        <input type="radio" id="filtDrinkingWY" name="filtDrinkingW" value="yes"><label for="filtDrinkingWY">Yes</label>
+                        <input type="radio" id="filtDrinkingWN" name="filtDrinkingW" value="no" checked="checked"><label for="filtDrinkingWN">No</label>
+                    </div>
+
+                    <div class="label">Seating: </div>
+                    <div class="btn-group">
+                        <input type="radio" id="filtSeatingY" name="filtSeating"><label for="filtSeatingY">Yes</label>
+                        <input type="radio" id="filtSeatingN" name="filtSeating" checked="checked"><label for="filtSeatingN">No</label>
+                    </div>
+
+                    <div class="label">Shade: </div>
+                    <div class="btn-group">
+                        <input type="radio" id="filtShadeY" name="filtShade"><label for="filtShadeY">Yes</label>
+                        <input type="radio" id="filtShadeN" name="filtShade" checked="checked"><label for="filtShadeN">No</label>
+                    </div>
+
+                    <div class="label">Age Level: </div>
+                    <div class="btn-group">
+                        <input type="radio" id="filtAge1" name="filtAge" value="any" checked="checked"><label for="filtAge1">Any</label>
+                        <input type="radio" id="filtAge2" name="filtAge" value="twotofive"><label for="filtAge2">2-5</label>
+                        <input type="radio" id="filtAge3" name="filtAge" value="fiveto12"><label for="filtAge3">5-12</label>
+                    </div>
+
+                    <div id='searchBtn' class='btn'>Search Playgrounds </div>
+                </div>
+                </div>
+                <div id="results_panel">
+                    <div id="app_listview">
+
+                    </div>
+                    <div id='returnBtn' class='btn'><< CLEAR SEARCH</div>
                 </div>
             </div>
 
@@ -104,6 +159,31 @@
     <h3>The Team at Project Play Alexandria </h3>
 </div>
 
+<div id="app_detail_modal" style="display:none">
+    <div id="detail_header" class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id='detail_title'></h3>
+    </div>
+    <div class="modal-body">
+        <p>Restrooms: <span id='detail_restrooms'></span></p>
+        <p>Drinking Fountains: <span id='detail_drinkingfountain'></span></p>
+        <p>Seating: <span id='detail_seating'></span></p>
+        <p>Age Groups: <span id="detail_agelevel_text"></span></p>
+        <p>Comments: <span id="detail_comments_text"></span></p>
+        <!--<table>
+            <tr>
+                <td id='detail_comments_label'>Comments:</td>
+                <td id='detail_comments_text'></td>
+            </tr>
+        </table>-->
+    </div>
+    <!--
+    <div class="modal-footer">
+        <a href="#" class="btn">Close</a>
+    </div>
+    -->
+</div>
+
 
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery-migrate.min.js"></script>
@@ -112,16 +192,17 @@
 <script type="text/javascript" src="js/wait-for-images.js"></script>
 <script type="text/javascript" src="js/background-image.js"></script>
 <script type="text/javascript" src="js/jquery.form.min.js"></script>
+<script type="text/javascript" src="js/jquery.simplemodal.1.4.4.min.js"></script>
 <script type="text/javascript" src="js/scripts.js"></script>
-<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.css" />
-<script src="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places,geometry" ></script>
 <script src ="js/playSvc.js"></script>
 <script src="js/app.js" ></script>
 <script>
     var $ = jQuery;
     var app;
     $(document).ready(function() {
-        app = playApp(); app.initialize();
+        app = playApp();
+        app.initialize();
         $(window).resize(app.rightSizeListView);
     });
 </script>

@@ -601,3 +601,72 @@ ul#menu-top li.current-menu-item ul, ul#menu-top li.current-page-item ul, ul#men
 .oddRow {
     background-color: #E1E1E1;
 }
+
+.btn {
+    background-color: #9ACE69;
+    border-radius: 5px;
+    border: solid #FFFFFF 1px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin: 3px 0px;
+    text-align: center;
+}
+
+.sbtext {
+    color: white;
+}
+
+input:not([type=submit]):not([type=file]), select {
+    padding: 6px;
+    border-radius: 5px;
+    vertical-align: middle;
+    font-family: Arial;
+    font-size: 80%;
+}
+
+.filter {
+    margin: 5px 0px;
+}
+
+#app_detail_modal {
+    padding:10px;
+}
+
+#simplemodal-overlay {
+    background-color:black;
+    filter: alpha(opacity=75); /* internet explorer */
+    -khtml-opacity: 0.75;      /* khtml, old safari */
+    -moz-opacity: 0.75;       /* mozilla, netscape */
+    opacity: 0.75;           /* fx, safari, opera */
+}
+
+#simplemodal-container {
+    min-width: 350px;
+    background: #ffffff;
+    padding: 2px;
+    box-shadow: 0px 0px 12px #333333;
+    border-radius: 5px;
+}
+
+.close {
+    float:right;
+    padding: 0px 0px;
+}
+
+#advancedFilterPanel {
+    text-align: left;
+    color: #ffffff;
+}
+
+#advancedFilterPanel hr {
+   border: 0;
+   border-bottom: 1px dashed #ffffff;
+   background: #E1E1E1;
+}
+
+input[type='radio'], label{
+    vertical-align: baseline;
+    padding: 10px 2px;
+    margin: 10px 2px;
+}

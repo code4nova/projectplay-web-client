@@ -263,12 +263,10 @@ var playApp = function()
 				var pt = new google.maps.LatLng(playObj.lat, playObj.long);
 				if (inst.lastCircle) {
 					if (inst.lastCircle.contains(pt)) {
-						filteredList.push(playObj);
 						f.location = true;
 					}
 				}
 				else {
-					filteredList.push(playObj);
 					f.location = true;
 				}
 

@@ -1,0 +1,23 @@
+#aplays-header {
+  background-color: #FFFFFF;
+  text-align: left;
+  font-size: 32px;
+  font-weight: bold;
+  color: #93288D;
+  height: 45px;
+  padding-left: 3px;
+}
+
+#aplays-drawer {
+  float: right;
+  padding-top: 2px;
+  padding-right: 10px;
+  font-size: 28px;
+  font-family: 'Open Sans', sans-serif;
+}
+
+#aplays-drawer-button {
+  display: inline-block;
+  margin-left: 15px;
+  cursor: pointer;
+}

@@ -6,7 +6,7 @@ var playApp = function()
 		startLatLon: [38.818860, -77.091497],
 		startZoom: 13,
 	    logo: "./img/aplays.png",
-	    playUrl: "http://projectplay.herokuapp.com/"
+	    playUrl: "http://api.alexandriaplays.org/"
 	};
 
 	inst.lastCircle = null;

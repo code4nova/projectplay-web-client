@@ -1,3 +1,5 @@
+/* global $ */
+/* global google */
 var playSvc = function(url) {
 	var inst = {};
 	inst.baseUrl = url;
@@ -26,7 +28,8 @@ var playSvc = function(url) {
 		var geocoder = new google.maps.Geocoder(); 
 		geocoder.geocode(
 		    { address : address, 
-		      region: 'US' 
+		      region: 'US',
+			  administrativeArea: 'VA'
 		    }, 
 		    function(results, status){
 		      caller.apply(null, [results[0]]);
@@ -78,4 +81,4 @@ var playSvc = function(url) {
 
 google.maps.Circle.prototype.contains = function(latLng) {
   return this.getBounds().contains(latLng) && google.maps.geometry.spherical.computeDistanceBetween(this.getCenter(), latLng) <= this.getRadius();
-}
+};
